@@ -16,10 +16,63 @@
       href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
     />
     <link rel="stylesheet" href="./assets/css/style.css">
-    <title>Document</title>
+    <title>Weather Forecast</title>
 </head>
 <body>
-    <p>Hello World</p>
+    <header>
+      <!--bootstrap header/nav bar?-->
+      <nav class="navbar navbar-light bg-light justify-content-center">
+        <span class="navbar-brand mb-0 h1">Weather Forecast</span>
+      </nav>
+    </header>
+    <main>
+      <div class="container vh-100 w-100">
+        <!--bootstrap row-->
+          <div class="row vh-100 w-100">
+            <!--bootstrap col for search and list of cities-->
+            <div class="col-3 bg-dark">
+              <!--bootstrap search input and button-->
+              <form>
+                <div class="form-group">
+                  <label for="inputCity" class="text-light">Search a City</label>
+                  <input type="text" class="form-control" id="input-city">
+                </div>
+                <button type="submit" class="btn btn-primary" id="submit-button">Submit</button>
+              </form>
+              <!--bootstrap list-->
+              <div class="list-group" id="city-list">
+                <button type="button" class="list-group-item list-group-item-action active">
+                  Cras justo odio
+                </button>
+                <button type="button" class="list-group-item list-group-item-action">Dapibus ac facilisis in</button>
+                <button type="button" class="list-group-item list-group-item-action">Morbi leo risus</button>
+                <button type="button" class="list-group-item list-group-item-action">Porta ac consectetur ac</button>
+                <button type="button" class="list-group-item list-group-item-action" disabled>Vestibulum at eros</button>
+              </div>
+            </div>
+            <!--bootstrap col for forecast-->
+            <div class="col-9 bg-primary">
+              <!--bootstrap row for today's forcast-->
+              <div class="row vh-50 w-100">
+                <span class="h2">Today's Forecast</span>
+                <p>Temp</p>
+                <p>Wind</p>
+                <p>Humidity</p>
+              </div>
+              <!--bootstrap row for future forcast-->
+              <div class="row vh-50 w-100">
+                <!--bootstrap cols * 5 for future days-->
+                <div class="card" style="width: 18rem;">
+                  <div class="card-body">
+                    <h5 class="card-title">Date</h5>
+                    <p class="card-text">Forecast</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </main>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="./assets/js/script.js"></script>
