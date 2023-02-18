@@ -25,14 +25,39 @@ function getCurrentLocation() {
 
 function getExistingCities() {
     var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
-    for (i = 0; i < storedCities.length; i++) {
-        var newButton = $(document.createElement("button"));
-        newButton.addClass("list-group-item", "list-group-item-action");
-        newButton.attr("lat", storedCities[i].storedCityLat);
-        newButton.attr("lon", storedCities[i].storedCityLon);
-        newButton.text(storedCities[i].storedCityName);
-        cityList.append(newButton);
+    for (k = 0; k < storedCities.length; k++) {
+        makeButtonGroup(storedCities[k].storedCityName, storedCities[k].storedCityLat, storedCities[k].storedCityLon);
     }
+    setActive(yourLocation);
+}
+
+function makeButtonGroup(name, lat, lon) {
+    var newGroup = $(document.createElement("div"));
+    var newButton = $(document.createElement("button"));
+    var newX = $(document.createElement("button"));
+    newGroup.addClass("btn-group");
+    newGroup.attr("role", "group");
+    newButton.addClass("list-group-item list-group-item-action text-center");
+    newButton.attr("lat", lat);
+    newButton.attr("lon", lon);
+    newButton.text(name);
+    newX.addClass("btn btn-secondary");
+    newX.text("X");
+    newGroup.append(newButton);
+    newGroup.append(newX);
+    cityList.append(newGroup);
+    setActive(newButton);
+}
+
+function deleteGroup(target) {
+    var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+    for (p = 0; p < storedCities.length; p++) {
+        if (storedCities[p].storedCityName === $(target).parent().children().eq(0).text()) {
+            storedCities.splice(p, 1);
+        }
+    }
+    localStorage.setItem("cities", JSON.stringify(storedCities));
+   $(target).parent().remove();
 }
 
 function lookupCity(city) {
@@ -52,19 +77,13 @@ function lookupCity(city) {
                 var newCity = true;
                 var existingIndex = -1;
                 for (i = 0; i < cityList.children().length; i++) {
-                    if (cityName === cityList.children().eq(i).text()) {
+                    if (cityName === cityList.children().eq(i).children().eq(0).text()) {
                         newCity = false;
                         existingIndex = i;
                     }
                 }
                 if (newCity) {
-                    var newButton = $(document.createElement("button"));
-                    newButton.addClass("list-group-item", "list-group-item-action");
-                    newButton.attr("lat", latitude);
-                    newButton.attr("lon", longitude);
-                    newButton.text(cityName);
-                    setActive(newButton);
-                    cityList.append(newButton);
+                    makeButtonGroup(cityName, latitude, longitude);
                     var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
                     var newStoredCity = {
                         storedCityName: cityName,
@@ -75,7 +94,7 @@ function lookupCity(city) {
                     localStorage.setItem("cities", JSON.stringify(storedCities));
                 }
                 else {
-                    setActive(cityList.children().eq(existingIndex));
+                    setActive(cityList.children().eq(existingIndex).children().eq(0));
                 }
             }
             else {
@@ -86,7 +105,7 @@ function lookupCity(city) {
 
 function setActive(button) {
     for (i = 0; i < cityList.children().length; i++) {
-        cityList.children().eq(i).removeClass("active");
+        cityList.children().eq(i).children().eq(0).removeClass("active");
     }
     $(button).addClass("active");
 }
@@ -180,9 +199,16 @@ function handleSubmit(event) {
 
 function handleSelect(event) {
     var target = $(event.target);
-    lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
-    lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
-    setActive(target);
+    console.log("button");
+    if (target.text() === "X") {
+        console.log("delete");
+        deleteGroup(target);
+    }
+    else {
+        lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
+        lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
+        setActive(target);
+    }
 }
 
 // USER INTERACTIONS
