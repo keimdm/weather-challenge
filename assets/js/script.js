@@ -113,12 +113,6 @@ function lookupWeatherForecast(latitude, longitude) {
         });
 }
 
-//$("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
-//$("#weather-icon").attr("alt", data.weather[0].description);
-//$("#current-temp").text("Temperature: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
-//$("#current-wind").text("Wind Speed: " + data.wind.speed + " mph");
-//$("#current-humid").text("Humidity: " + data.main.humidity + "%");
-
 function updateForecastInfo(data) {
     for (i = 0; i < forecastContainer.children().length; i++) {
         var weatherCode = 800;
