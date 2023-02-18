@@ -3,7 +3,7 @@ var inputCity = $("#input-city");
 var submitButton = $("#submit-button");
 var cityList = $("#city-list");
 var forecastContainer = $("#forecast-container");
-var yourLocation = $("your-location");
+var yourLocation = $("#your-location");
 
 // DATA
 var priorityList = ["6", "2", "5", "3", "7", "8"];
@@ -16,7 +16,6 @@ function getCurrentLocation() {
             lookupWeatherForecast(position.coords.latitude, position.coords.longitude);
             yourLocation.attr("lat", position.coords.latitude);
             yourLocation.attr("lon", position.coords.longitude);
-            console.log("did it");
         });
     } 
     else {
@@ -169,7 +168,6 @@ function updateForecastInfo(data) {
 
 function handleSubmit(event) {
     event.preventDefault();
-    console.log("submit");
     var citySearch = $(event.target).parent().children().eq(0).children().eq(1).val();
     try {
         lookupCity(citySearch);
@@ -180,11 +178,19 @@ function handleSubmit(event) {
     $(event.target).parent().children().eq(0).children().eq(1).val("");
 }
 
+function handleSelect(event) {
+    var target = $(event.target);
+    lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
+    lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
+    setActive(target);
+}
+
 // USER INTERACTIONS
 // search bar for cities - on submit, add city to list and loadWeather(new City)
 // delete city button - remove city from list and search history
 // click on city - load Weather for that city
 submitButton.on("click", handleSubmit);
+cityList.on("click", "button", handleSelect);
 
 // INITIALIZATIONS
 getCurrentLocation()
