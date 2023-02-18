@@ -107,6 +107,8 @@ function updateForecastInfo(data) {
             windSum = windSum + data.list[j].wind.speed;
             humidSum = humidSum + data.list[j].main.humidity;
         }
+        iconCode = iconCode.slice(0, 2) + "d";
+        console.log(iconCode);
         tempMin = Math.floor((((Number(tempMin) - 273.15) * 1.8) + 32));
         tempMax = Math.floor((((Number(tempMax) - 273.15) * 1.8) + 32));
         var windAvg = Math.floor(windSum / 8);
