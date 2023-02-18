@@ -16,6 +16,7 @@ function getCurrentLocation() {
             lookupWeatherForecast(position.coords.latitude, position.coords.longitude);
             yourLocation.attr("lat", position.coords.latitude);
             yourLocation.attr("lon", position.coords.longitude);
+            console.log("did it");
         });
     } 
     else {
@@ -24,7 +25,15 @@ function getCurrentLocation() {
 }
 
 function getExistingCities() {
-
+    var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+    for (i = 0; i < storedCities.length; i++) {
+        var newButton = $(document.createElement("button"));
+        newButton.addClass("list-group-item", "list-group-item-action");
+        newButton.attr("lat", storedCities[i].storedCityLat);
+        newButton.attr("lon", storedCities[i].storedCityLon);
+        newButton.text(storedCities[i].storedCityName);
+        cityList.append(newButton);
+    }
 }
 
 function lookupCity(city) {
