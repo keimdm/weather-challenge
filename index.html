@@ -22,7 +22,7 @@
     <header>
       <!--bootstrap header/nav bar?-->
       <nav class="navbar navbar-light bg-light justify-content-center">
-        <span class="navbar-brand mb-0 h1">Weather Forecast</span>
+        <span class="navbar-brand mb-0 h2">Weather Forecast</span>
       </nav>
     </header>
     <main>
@@ -42,30 +42,68 @@
               <!--bootstrap list-->
               <div class="list-group" id="city-list">
                 <button type="button" class="list-group-item list-group-item-action active">
-                  Cras justo odio
+                  Current Location
                 </button>
-                <button type="button" class="list-group-item list-group-item-action">Dapibus ac facilisis in</button>
-                <button type="button" class="list-group-item list-group-item-action">Morbi leo risus</button>
-                <button type="button" class="list-group-item list-group-item-action">Porta ac consectetur ac</button>
-                <button type="button" class="list-group-item list-group-item-action" disabled>Vestibulum at eros</button>
               </div>
             </div>
             <!--bootstrap col for forecast-->
             <div class="col-9 bg-primary">
               <!--bootstrap row for today's forcast-->
-              <div class="row vh-50 w-100">
-                <span class="h2">Today's Forecast</span>
-                <p>Temp</p>
-                <p>Wind</p>
-                <p>Humidity</p>
+              <div class="row vh-50 w-100 text-light">
+                <div class="row vh-25 w-100">
+                  <span class="h2" id="current-weather">Today's Forecast:</span>
+                  <img src="" alt="" id="weather-icon" class="img-fluid w-25">
+                </div>
+                <p id="current-temp">Temperature: </p>
+                <p id="current-wind">Wind Speed: </p>
+                <p id="current-humid">Humidity: </p>
               </div>
               <!--bootstrap row for future forcast-->
-              <div class="row vh-50 w-100">
-                <!--bootstrap cols * 5 for future days-->
-                <div class="card" style="width: 18rem;">
+              <div class="row vh-50 w-100 justify-content-around" id="forecast-container">
+                <!--bootstrap cards * 5 for future days-->
+                <div class="card" style="width: 10rem;" id="forecast1">
                   <div class="card-body">
                     <h5 class="card-title">Date</h5>
-                    <p class="card-text">Forecast</p>
+                    <img src="" alt="">
+                    <p>Temperature: </p>
+                    <p>Wind Speed: </p>
+                    <p>Humidity: </p>
+                  </div>
+                </div>
+                <div class="card" style="width: 10rem;" id="forecast2">
+                  <div class="card-body">
+                    <h5 class="card-title">Date</h5>
+                    <img src="" alt="">
+                    <p>Temperature: </p>
+                    <p>Wind Speed: </p>
+                    <p>Humidity: </p>
+                  </div>
+                </div>
+                <div class="card" style="width: 10rem;" id="forecast3">
+                  <div class="card-body">
+                    <h5 class="card-title">Date</h5>
+                    <img src="" alt="">
+                    <p>Temperature: </p>
+                    <p>Wind Speed: </p>
+                    <p>Humidity: </p>
+                  </div>
+                </div>
+                <div class="card" style="width: 10rem;" id="forecast4">
+                  <div class="card-body">
+                    <h5 class="card-title">Date</h5>
+                    <img src="" alt="">
+                    <p>Temperature: </p>
+                    <p>Wind Speed: </p>
+                    <p>Humidity: </p>
+                  </div>
+                </div>
+                <div class="card" style="width: 10rem;" id="forecast5">
+                  <div class="card-body">
+                    <h5 class="card-title">Date</h5>
+                    <img src="" alt="">
+                    <p>Temperature: </p>
+                    <p>Wind Speed: </p>
+                    <p>Humidity: </p>
                   </div>
                 </div>
               </div>
