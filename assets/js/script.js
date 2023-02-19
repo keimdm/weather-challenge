@@ -3,6 +3,7 @@ var inputCity = $("#input-city");
 var submitButton = $("#submit-button");
 var cityList = $("#city-list");
 var forecastContainer = $("#forecast-container");
+var yourLocation = $("#your-location");
 
 // DATA
 var priorityList = ["6", "2", "5", "3", "7", "8"];
@@ -13,6 +14,8 @@ function getCurrentLocation() {
         navigator.geolocation.getCurrentPosition(function (position) {
             lookupCurrentForecast(position.coords.latitude, position.coords.longitude);
             lookupWeatherForecast(position.coords.latitude, position.coords.longitude);
+            yourLocation.attr("lat", position.coords.latitude);
+            yourLocation.attr("lon", position.coords.longitude);
         });
     } 
     else {
@@ -21,7 +24,40 @@ function getCurrentLocation() {
 }
 
 function getExistingCities() {
+    var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+    for (k = 0; k < storedCities.length; k++) {
+        makeButtonGroup(storedCities[k].storedCityName, storedCities[k].storedCityLat, storedCities[k].storedCityLon);
+    }
+    setActive(yourLocation);
+}
 
+function makeButtonGroup(name, lat, lon) {
+    var newGroup = $(document.createElement("div"));
+    var newButton = $(document.createElement("button"));
+    var newX = $(document.createElement("button"));
+    newGroup.addClass("btn-group");
+    newGroup.attr("role", "group");
+    newButton.addClass("list-group-item list-group-item-action text-center");
+    newButton.attr("lat", lat);
+    newButton.attr("lon", lon);
+    newButton.text(name);
+    newX.addClass("btn btn-secondary");
+    newX.text("X");
+    newGroup.append(newButton);
+    newGroup.append(newX);
+    cityList.append(newGroup);
+    setActive(newButton);
+}
+
+function deleteGroup(target) {
+    var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+    for (p = 0; p < storedCities.length; p++) {
+        if (storedCities[p].storedCityName === $(target).parent().children().eq(0).text()) {
+            storedCities.splice(p, 1);
+        }
+    }
+    localStorage.setItem("cities", JSON.stringify(storedCities));
+   $(target).parent().remove();
 }
 
 function lookupCity(city) {
@@ -31,11 +67,47 @@ function lookupCity(city) {
             return responseCity.json();
         })
         .then(function (dataCity) {
-            var latitude = $(dataCity).eq(0).attr("lat");
-            var longitude = $(dataCity).eq(0).attr("lon");
-            lookupCurrentForecast(latitude, longitude);
-            lookupWeatherForecast(latitude, longitude);
+            if (dataCity.length > 0) {
+                console.log(dataCity);
+                var latitude = $(dataCity).eq(0).attr("lat");
+                var longitude = $(dataCity).eq(0).attr("lon");
+                var cityName = $(dataCity).eq(0).attr("name");
+                lookupCurrentForecast(latitude, longitude);
+                lookupWeatherForecast(latitude, longitude);
+                var newCity = true;
+                var existingIndex = -1;
+                for (i = 0; i < cityList.children().length; i++) {
+                    if (cityName === cityList.children().eq(i).children().eq(0).text()) {
+                        newCity = false;
+                        existingIndex = i;
+                    }
+                }
+                if (newCity) {
+                    makeButtonGroup(cityName, latitude, longitude);
+                    var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+                    var newStoredCity = {
+                        storedCityName: cityName,
+                        storedCityLat: latitude,
+                        storedCityLon: longitude
+                    };
+                    storedCities.push(newStoredCity);
+                    localStorage.setItem("cities", JSON.stringify(storedCities));
+                }
+                else {
+                    setActive(cityList.children().eq(existingIndex).children().eq(0));
+                }
+            }
+            else {
+                console.log("city not found");
+            }
         });
+}
+
+function setActive(button) {
+    for (i = 0; i < cityList.children().length; i++) {
+        cityList.children().eq(i).children().eq(0).removeClass("active");
+    }
+    $(button).addClass("active");
 }
 
 function lookupCurrentForecast(latitude, longitude) {
@@ -64,16 +136,9 @@ function lookupWeatherForecast(latitude, longitude) {
             return responseWeather.json();
         })
         .then(function (dataWeather) {
-            console.log(dataWeather);
             updateForecastInfo(dataWeather);
         });
 }
-
-//$("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
-//$("#weather-icon").attr("alt", data.weather[0].description);
-//$("#current-temp").text("Temperature: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
-//$("#current-wind").text("Wind Speed: " + data.wind.speed + " mph");
-//$("#current-humid").text("Humidity: " + data.main.humidity + "%");
 
 function updateForecastInfo(data) {
     for (i = 0; i < forecastContainer.children().length; i++) {
@@ -108,7 +173,6 @@ function updateForecastInfo(data) {
             humidSum = humidSum + data.list[j].main.humidity;
         }
         iconCode = iconCode.slice(0, 2) + "d";
-        console.log(iconCode);
         tempMin = Math.floor((((Number(tempMin) - 273.15) * 1.8) + 32));
         tempMax = Math.floor((((Number(tempMax) - 273.15) * 1.8) + 32));
         var windAvg = Math.floor(windSum / 8);
@@ -118,15 +182,33 @@ function updateForecastInfo(data) {
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temperature: " + tempMin + " / " + tempMax + " °F");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(3).text("Wind Speed: " + windAvg + " mph");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(4).text("Humidity: " + humidAvg + "%");
-        console.log($("#forecast" + (i + 1).toString()));
     }
 }
 
 function handleSubmit(event) {
     event.preventDefault();
-    console.log("submit");
     var citySearch = $(event.target).parent().children().eq(0).children().eq(1).val();
-    lookupCity(citySearch);
+    try {
+        lookupCity(citySearch);
+    }
+    catch {
+        console.log("City not found. Please try again.");
+    }
+    $(event.target).parent().children().eq(0).children().eq(1).val("");
+}
+
+function handleSelect(event) {
+    var target = $(event.target);
+    console.log("button");
+    if (target.text() === "X") {
+        console.log("delete");
+        deleteGroup(target);
+    }
+    else {
+        lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
+        lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
+        setActive(target);
+    }
 }
 
 // USER INTERACTIONS
@@ -134,6 +216,7 @@ function handleSubmit(event) {
 // delete city button - remove city from list and search history
 // click on city - load Weather for that city
 submitButton.on("click", handleSubmit);
+cityList.on("click", "button", handleSelect);
 
 // INITIALIZATIONS
 getCurrentLocation()
