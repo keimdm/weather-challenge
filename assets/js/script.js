@@ -19,7 +19,7 @@ function getCurrentLocation() {
         });
     } 
     else {
-        console.log("not available");
+    
     }
 }
 
@@ -138,6 +138,9 @@ function updateCurrentInfo(data) {
     $("#current-temp").text("Temp: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
     $("#current-wind").text("Wind: " + data.wind.speed + " mph");
     $("#current-humid").text("Humidity: " + data.main.humidity + "%");
+    $("#current-temp").removeClass("d-none");
+    $("#current-wind").removeClass("d-none");
+    $("#current-humid").removeClass("d-none");
 }
 
 function lookupWeatherForecast(latitude, longitude) {
@@ -195,18 +198,14 @@ function updateForecastInfo(data) {
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temp: " + tempMin + " / " + tempMax + " °F");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(3).text("Wind: " + windAvg + " mph");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(4).text("Humidity: " + humidAvg + "%");
+        $("#forecast" + (i + 1).toString()).removeClass("d-none");
     }
 }
 
 function handleSubmit(event) {
     event.preventDefault();
     var citySearch = $(event.target).parent().children().eq(0).children().eq(1).val();
-    try {
-        lookupCity(citySearch);
-    }
-    catch {
-        console.log("City not found. Please try again.");
-    }
+    lookupCity(citySearch);
     $(event.target).parent().children().eq(0).children().eq(1).val("");
 }
 
@@ -223,20 +222,24 @@ function handleSelect(event) {
         }
         else {
             setActive(yourLocation);
+            $("#current-weather").text("Please select a location.");
+            $("#current-temp").addClass("d-none");
+            $("#current-wind").addClass("d-none");
+            $("#current-humid").addClass("d-none");
+            $("#weather-icon").attr("src", "");
+            $("#weather-icon").attr("alt", "");
+            for (i = 0; i < forecastContainer.children().length; i++) {
+                forecastContainer.children().eq(i).addClass("d-none");
+            }
             getCurrentLocation();
         }
     }
 }
 
 // USER INTERACTIONS
-// search bar for cities - on submit, add city to list and loadWeather(new City)
-// delete city button - remove city from list and search history
-// click on city - load Weather for that city
 submitButton.on("click", handleSubmit);
 cityList.on("click", "button", handleSelect);
 
 // INITIALIZATIONS
 getCurrentLocation()
 getExistingCities();
-// load weather for top city
-//loadWeather("top city");
