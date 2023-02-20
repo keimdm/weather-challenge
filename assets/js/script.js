@@ -41,7 +41,7 @@ function makeButtonGroup(name, lat, lon) {
     newButton.attr("lat", lat);
     newButton.attr("lon", lon);
     newButton.text(name);
-    newX.addClass("btn btn-secondary rounded-0");
+    newX.addClass("btn btn-secondary rounded-0 delete");
     newX.text("X");
     newGroup.append(newButton);
     newGroup.append(newX);
@@ -202,7 +202,7 @@ function handleSubmit(event) {
 
 function handleSelect(event) {
     var target = $(event.target);
-    if (target.text() === "X") {
+    if (target.hasClass("delete")) {
         deleteGroup(target);
     }
     else {
