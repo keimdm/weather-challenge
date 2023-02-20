@@ -108,7 +108,7 @@ function lookupCity(city) {
                 }
             }
             else {
-                console.log("city not found");
+                console.log("City not found - please try again.");
             }
         });
 }
