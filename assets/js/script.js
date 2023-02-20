@@ -133,7 +133,7 @@ function lookupCurrentForecast(latitude, longitude) {
 
 function updateCurrentInfo(data) {
     $("#current-weather").text(data.name + " Current Weather:");
-    $("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
+    $("#weather-icon").attr("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
     $("#weather-icon").attr("alt", data.weather[0].description);
     $("#current-temp").text("Temp: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
     $("#current-wind").text("Wind: " + data.wind.speed + " mph");
@@ -193,7 +193,7 @@ function updateForecastInfo(data) {
         var humidAvg = Math.floor(humidSum / 8);
         var currentDate = dayjs.unix(data.list[i * 8].dt);
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(0).text(currentDate.format("MMM D"));
-        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png");
+        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("src", "https://openweathermap.org/img/wn/" + iconCode + "@2x.png");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("alt", altText);
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temp: " + tempMin + " / " + tempMax + " °F");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(3).text("Wind: " + windAvg + " mph");
