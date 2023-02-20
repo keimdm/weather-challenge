@@ -53,17 +53,17 @@
               <!--bootstrap row for today's forcast-->
               <div class="row vh-25 w-100 text-light p-3">
                 <div class="row vh-50 w-100">
-                  <span class="h2 sub-heading-text" id="current-weather">Current Weather:</span>
+                  <span class="h2 sub-heading-text" id="current-weather">Please select a location.</span>
                   <img src="" alt="" id="weather-icon" class="img-fluid w-25">
                 </div>
-                <p id="current-temp">Temp: </p>
-                <p id="current-wind">Wind: </p>
-                <p id="current-humid">Humidity: </p>
+                <p class="d-none" id="current-temp">Temp: </p>
+                <p class="d-none" id="current-wind">Wind: </p>
+                <p class="d-none" id="current-humid">Humidity: </p>
               </div>
               <!--bootstrap row for future forcast-->
               <div class="row vh-25 w-100 justify-content-around margin-0" id="forecast-container">
                 <!--bootstrap cards * 5 for future days-->
-                <div class="card mb-4 forecast-block" id="forecast1">
+                <div class="card mb-4 forecast-block d-none" id="forecast1">
                   <div class="card-body">
                     <h5 class="card-title">Date</h5>
                     <img src="" alt="">
@@ -72,7 +72,7 @@
                     <p>Humidity: </p>
                   </div>
                 </div>
-                <div class="card mb-4 forecast-block" id="forecast2">
+                <div class="card mb-4 forecast-block d-none" id="forecast2">
                   <div class="card-body">
                     <h5 class="card-title">Date</h5>
                     <img src="" alt="">
@@ -81,7 +81,7 @@
                     <p>Humidity: </p>
                   </div>
                 </div>
-                <div class="card mb-4 forecast-block" id="forecast3">
+                <div class="card mb-4 forecast-block d-none" id="forecast3">
                   <div class="card-body">
                     <h5 class="card-title">Date</h5>
                     <img src="" alt="">
@@ -90,7 +90,7 @@
                     <p>Humidity: </p>
                   </div>
                 </div>
-                <div class="card mb-4 forecast-block" id="forecast4">
+                <div class="card mb-4 forecast-block d-none" id="forecast4">
                   <div class="card-body">
                     <h5 class="card-title">Date</h5>
                     <img src="" alt="">
@@ -99,7 +99,7 @@
                     <p>Humidity: </p>
                   </div>
                 </div>
-                <div class="card mb-4 forecast-block" id="forecast5">
+                <div class="card mb-4 forecast-block d-none" id="forecast5">
                   <div class="card-body">
                     <h5 class="card-title">Date</h5>
                     <img src="" alt="">
