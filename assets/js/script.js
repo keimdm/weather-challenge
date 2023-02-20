@@ -150,7 +150,9 @@ function lookupCurrentForecast(latitude, longitude) {
 
 // displays given current weather data on the page
 function updateCurrentInfo(data) {
-    $("#current-weather").text(data.name + " Current Weather:");
+    console.log(data);
+    var displayDate = dayjs.unix(data.dt);
+    $("#current-weather").text(data.name + ": " + displayDate.format("MMM D[, ]YYYY"));
     $("#weather-icon").attr("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
     $("#weather-icon").attr("alt", data.weather[0].description);
     $("#current-temp").text("Temp: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
