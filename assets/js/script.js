@@ -41,7 +41,7 @@ function makeButtonGroup(name, lat, lon) {
     newButton.attr("lat", lat);
     newButton.attr("lon", lon);
     newButton.text(name);
-    newX.addClass("btn btn-secondary rounded-0");
+    newX.addClass("btn btn-secondary rounded-0 delete");
     newX.text("X");
     newGroup.append(newButton);
     newGroup.append(newX);
@@ -50,6 +50,17 @@ function makeButtonGroup(name, lat, lon) {
 }
 
 function deleteGroup(target) {
+    if ($(target).parent().children().eq(0).hasClass("active")) {
+        if (yourLocation.attr("lat") && yourLocation.attr("lon")) {
+            lookupCurrentForecast(yourLocation.attr("lat"), yourLocation.attr("lon"));
+            lookupWeatherForecast(yourLocation.attr("lat"), yourLocation.attr("lon"));
+            setActive(yourLocation);    
+        }
+        else {
+            setActive(yourLocation);
+            getCurrentLocation();
+        }    
+    }
     var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
     for (p = 0; p < storedCities.length; p++) {
         if (storedCities[p].storedCityName === $(target).parent().children().eq(0).text()) {
@@ -68,7 +79,6 @@ function lookupCity(city) {
         })
         .then(function (dataCity) {
             if (dataCity.length > 0) {
-                console.log(dataCity);
                 var latitude = $(dataCity).eq(0).attr("lat");
                 var longitude = $(dataCity).eq(0).attr("lon");
                 var cityName = $(dataCity).eq(0).attr("name");
@@ -202,15 +212,19 @@ function handleSubmit(event) {
 
 function handleSelect(event) {
     var target = $(event.target);
-    console.log("button");
-    if (target.text() === "X") {
-        console.log("delete");
+    if (target.hasClass("delete")) {
         deleteGroup(target);
     }
     else {
-        lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
-        lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
-        setActive(target);
+        if (target.attr("lat") && target.attr("lon")) {
+            lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
+            lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
+            setActive(target);    
+        }
+        else {
+            setActive(yourLocation);
+            getCurrentLocation();
+        }
     }
 }
 
