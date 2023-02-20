@@ -50,6 +50,17 @@ function makeButtonGroup(name, lat, lon) {
 }
 
 function deleteGroup(target) {
+    if ($(target).parent().children().eq(0).hasClass("active")) {
+        if (yourLocation.attr("lat") && yourLocation.attr("lon")) {
+            lookupCurrentForecast(yourLocation.attr("lat"), yourLocation.attr("lon"));
+            lookupWeatherForecast(yourLocation.attr("lat"), yourLocation.attr("lon"));
+            setActive(yourLocation);    
+        }
+        else {
+            setActive(yourLocation);
+            getCurrentLocation();
+        }    
+    }
     var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
     for (p = 0; p < storedCities.length; p++) {
         if (storedCities[p].storedCityName === $(target).parent().children().eq(0).text()) {
@@ -68,7 +79,6 @@ function lookupCity(city) {
         })
         .then(function (dataCity) {
             if (dataCity.length > 0) {
-                console.log(dataCity);
                 var latitude = $(dataCity).eq(0).attr("lat");
                 var longitude = $(dataCity).eq(0).attr("lon");
                 var cityName = $(dataCity).eq(0).attr("name");
