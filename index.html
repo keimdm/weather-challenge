@@ -22,15 +22,15 @@
     <header>
       <!--bootstrap header/nav bar?-->
       <nav class="navbar navbar-light bg-light justify-content-center">
-        <span class="navbar-brand mb-0 h2">Weather Forecast</span>
+        <span class="navbar-brand mb-0 h2 heading-text">Weather Forecast</span>
       </nav>
     </header>
     <main>
-      <div class="container px-0">
+      <div class="container">
         <!--bootstrap row-->
           <div class="row">
             <!--bootstrap col for search and list of cities-->
-            <div class="col-3 bg-dark py-3">
+            <div class="col-sm-12 col-md-4 col-lg-3 bg-dark py-3 px-sm-3">
               <!--bootstrap search input and button-->
               <form>
                 <div class="form-group pb-2">
@@ -49,11 +49,11 @@
               </div>
             </div>
             <!--bootstrap col for forecast-->
-            <div class="col-9 bg-primary pb-3">
+            <div class="col-sm-12 col-md-8 col-lg-9 bg-primary pb-3 px-sm-3">
               <!--bootstrap row for today's forcast-->
               <div class="row vh-25 w-100 text-light p-3">
                 <div class="row vh-50 w-100">
-                  <span class="h2" id="current-weather">Current Weather:</span>
+                  <span class="h2 sub-heading-text" id="current-weather">Current Weather:</span>
                   <img src="" alt="" id="weather-icon" class="img-fluid w-25">
                 </div>
                 <p id="current-temp">Temp: </p>
