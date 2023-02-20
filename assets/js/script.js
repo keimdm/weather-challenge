@@ -41,7 +41,7 @@ function makeButtonGroup(name, lat, lon) {
     newButton.attr("lat", lat);
     newButton.attr("lon", lon);
     newButton.text(name);
-    newX.addClass("btn btn-secondary");
+    newX.addClass("btn btn-secondary rounded-0");
     newX.text("X");
     newGroup.append(newButton);
     newGroup.append(newX);
