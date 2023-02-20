@@ -122,6 +122,7 @@ function lookupCurrentForecast(latitude, longitude) {
 }
 
 function updateCurrentInfo(data) {
+    $("#current-weather").text(data.name + " Current Weather:");
     $("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
     $("#weather-icon").attr("alt", data.weather[0].description);
     $("#current-temp").text("Temp: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
@@ -141,7 +142,6 @@ function lookupWeatherForecast(latitude, longitude) {
 }
 
 function updateForecastInfo(data) {
-    console.log(data);
     for (i = 0; i < forecastContainer.children().length; i++) {
         var weatherCode = 800;
         var iconCode = "01d";
