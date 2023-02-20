@@ -41,7 +41,7 @@ function makeButtonGroup(name, lat, lon) {
     newButton.attr("lat", lat);
     newButton.attr("lon", lon);
     newButton.text(name);
-    newX.addClass("btn btn-secondary");
+    newX.addClass("btn btn-secondary rounded-0");
     newX.text("X");
     newGroup.append(newButton);
     newGroup.append(newX);
@@ -124,8 +124,8 @@ function lookupCurrentForecast(latitude, longitude) {
 function updateCurrentInfo(data) {
     $("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
     $("#weather-icon").attr("alt", data.weather[0].description);
-    $("#current-temp").text("Temperature: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
-    $("#current-wind").text("Wind Speed: " + data.wind.speed + " mph");
+    $("#current-temp").text("Temp: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
+    $("#current-wind").text("Wind: " + data.wind.speed + " mph");
     $("#current-humid").text("Humidity: " + data.main.humidity + "%");
 }
 
@@ -179,8 +179,8 @@ function updateForecastInfo(data) {
         var humidAvg = Math.floor(humidSum / 8);
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("alt", altText);
-        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temperature: " + tempMin + " / " + tempMax + " °F");
-        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(3).text("Wind Speed: " + windAvg + " mph");
+        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temp: " + tempMin + " / " + tempMax + " °F");
+        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(3).text("Wind: " + windAvg + " mph");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(4).text("Humidity: " + humidAvg + "%");
     }
 }
