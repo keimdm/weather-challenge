@@ -9,6 +9,7 @@ var yourLocation = $("#your-location");
 var priorityList = ["6", "2", "5", "3", "7", "8"];
 
 // FUNCTIONS
+// tries to get user's current location using geolocation API in browser, in terms of latitude and longitude
 function getCurrentLocation() {
     if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -23,6 +24,7 @@ function getCurrentLocation() {
     }
 }
 
+// pulls previously searched cities from local storage and calls makeButtonGroup to add them to the list
 function getExistingCities() {
     var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
     for (k = 0; k < storedCities.length; k++) {
@@ -31,6 +33,9 @@ function getExistingCities() {
     setActive(yourLocation);
 }
 
+// makes a button group for a given city in the list, attaching the latitude and longitude as attributes
+// Also creates a delete button with an x to remove a place from local storage and the list
+// sets the new city as active with setActive function
 function makeButtonGroup(name, lat, lon) {
     var newGroup = $(document.createElement("div"));
     var newButton = $(document.createElement("button"));
@@ -49,7 +54,10 @@ function makeButtonGroup(name, lat, lon) {
     setActive(newButton);
 }
 
+// removes city button group from list and local storage
+// if the deleted group was active, the user's location becomes active
 function deleteGroup(target) {
+    // switches to user location if deleted group is active
     if ($(target).parent().children().eq(0).hasClass("active")) {
         if (yourLocation.attr("lat") && yourLocation.attr("lon")) {
             lookupCurrentForecast(yourLocation.attr("lat"), yourLocation.attr("lon"));
@@ -61,6 +69,7 @@ function deleteGroup(target) {
             getCurrentLocation();
         }    
     }
+    // removes group from list and local storage
     var storedCities = JSON.parse(localStorage.getItem("cities")) || [];
     for (p = 0; p < storedCities.length; p++) {
         if (storedCities[p].storedCityName === $(target).parent().children().eq(0).text()) {
@@ -71,6 +80,9 @@ function deleteGroup(target) {
    $(target).parent().remove();
 }
 
+// uses Open Weather's geo API to look up a city name and return information about the city
+// then calls functions to lookup current and future weather
+// if the city is new, adds it to local storage and the list
 function lookupCity(city) {
     var requestURLCity = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=f53b5109b06704799e5260e2dda10bda";
     fetch(requestURLCity)
@@ -82,8 +94,10 @@ function lookupCity(city) {
                 var latitude = $(dataCity).eq(0).attr("lat");
                 var longitude = $(dataCity).eq(0).attr("lon");
                 var cityName = $(dataCity).eq(0).attr("name");
+                // gets current weather/forecast info
                 lookupCurrentForecast(latitude, longitude);
                 lookupWeatherForecast(latitude, longitude);
+                // checks if city is new and adds it to list/local storage if so
                 var newCity = true;
                 var existingIndex = -1;
                 for (i = 0; i < cityList.children().length; i++) {
@@ -108,11 +122,12 @@ function lookupCity(city) {
                 }
             }
             else {
-                console.log("city not found");
+                console.log("City not found - please try again.");
             }
         });
 }
 
+// makes the selected button active, and removes active class from all others
 function setActive(button) {
     for (i = 0; i < cityList.children().length; i++) {
         cityList.children().eq(i).children().eq(0).removeClass("active");
@@ -120,6 +135,8 @@ function setActive(button) {
     $(button).addClass("active");
 }
 
+// gets current forecaast info from Open Weather given latitude and longitude
+// then calls updateCurrentInfo to update details displayed
 function lookupCurrentForecast(latitude, longitude) {
     var requestURLCurrent = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=f53b5109b06704799e5260e2dda10bda";
     fetch(requestURLCurrent)
@@ -131,9 +148,10 @@ function lookupCurrentForecast(latitude, longitude) {
         });
 }
 
+// displays given current weather data on the page
 function updateCurrentInfo(data) {
     $("#current-weather").text(data.name + " Current Weather:");
-    $("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
+    $("#weather-icon").attr("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
     $("#weather-icon").attr("alt", data.weather[0].description);
     $("#current-temp").text("Temp: " + Math.floor((((Number(data.main.temp) - 273.15) * 1.8) + 32)) + " °F");
     $("#current-wind").text("Wind: " + data.wind.speed + " mph");
@@ -143,6 +161,8 @@ function updateCurrentInfo(data) {
     $("#current-humid").removeClass("d-none");
 }
 
+// uses Open Weather API to look up 5 day forecast data for a given location
+// then calls updateForecastInfo function to display
 function lookupWeatherForecast(latitude, longitude) {
     var requestURLWeather = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=f53b5109b06704799e5260e2dda10bda";
     fetch(requestURLWeather)
@@ -154,8 +174,10 @@ function lookupWeatherForecast(latitude, longitude) {
         });
 }
 
+// displays given 5 day forecast data on the page
 function updateForecastInfo(data) {
     for (i = 0; i < forecastContainer.children().length; i++) {
+        // takes an average over each day to condense the 8 data points per day into one for the display
         var weatherCode = 800;
         var iconCode = "01d";
         var altText = "clear sky";
@@ -164,6 +186,7 @@ function updateForecastInfo(data) {
         var windSum = 0;
         var humidSum = 0;
         for (j = i * 8; j < (i + 1) * 8; j++) {
+            // uses priority list to determine which icon to use to depict the day's weather (on average)
             codeSymbol = data.list[j].weather[0].id.toString().charAt(0);
             if (priorityList.indexOf(codeSymbol) < priorityList.indexOf(weatherCode.toString().charAt(0))) {
                 weatherCode = data.list[j].weather[0].id;
@@ -177,12 +200,15 @@ function updateForecastInfo(data) {
                     altText = data.list[j].weather[0].description;
                 }
             }
+            // keeps track of min temperature
             if (data.list[j].main.temp_min < tempMin) {
                 tempMin = data.list[j].main.temp_min;
             }
+            // keeps track of max temperature
             if (data.list[j].main.temp_max > tempMax) {
                 tempMax = data.list[j].main.temp_max;
             }
+            // adds on to sum of wind speed and humidity for taking average
             windSum = windSum + data.list[j].wind.speed;
             humidSum = humidSum + data.list[j].main.humidity;
         }
@@ -193,7 +219,7 @@ function updateForecastInfo(data) {
         var humidAvg = Math.floor(humidSum / 8);
         var currentDate = dayjs.unix(data.list[i * 8].dt);
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(0).text(currentDate.format("MMM D"));
-        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png");
+        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("src", "https://openweathermap.org/img/wn/" + iconCode + "@2x.png");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("alt", altText);
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temp: " + tempMin + " / " + tempMax + " °F");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(3).text("Wind: " + windAvg + " mph");
@@ -202,6 +228,8 @@ function updateForecastInfo(data) {
     }
 }
 
+// called when a new city name is submitted - calls lookupCity function
+// clears search bar after submission
 function handleSubmit(event) {
     event.preventDefault();
     var citySearch = $(event.target).parent().children().eq(0).children().eq(1).val();
@@ -209,6 +237,8 @@ function handleSubmit(event) {
     $(event.target).parent().children().eq(0).children().eq(1).val("");
 }
 
+// handles selecting a previously existing city from the list
+// if "your location" is selected but was blocked, it will prompt again
 function handleSelect(event) {
     var target = $(event.target);
     if (target.hasClass("delete")) {
