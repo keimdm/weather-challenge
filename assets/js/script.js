@@ -141,6 +141,7 @@ function lookupWeatherForecast(latitude, longitude) {
 }
 
 function updateForecastInfo(data) {
+    console.log(data);
     for (i = 0; i < forecastContainer.children().length; i++) {
         var weatherCode = 800;
         var iconCode = "01d";
@@ -177,6 +178,8 @@ function updateForecastInfo(data) {
         tempMax = Math.floor((((Number(tempMax) - 273.15) * 1.8) + 32));
         var windAvg = Math.floor(windSum / 8);
         var humidAvg = Math.floor(humidSum / 8);
+        var currentDate = dayjs.unix(data.list[i * 8].dt);
+        $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(0).text(currentDate.format("MMM D"));
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png");
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(1).attr("alt", altText);
         $("#forecast" + (i + 1).toString()).children().eq(0).children().eq(2).text("Temp: " + tempMin + " / " + tempMax + " °F");
