@@ -202,15 +202,19 @@ function handleSubmit(event) {
 
 function handleSelect(event) {
     var target = $(event.target);
-    console.log("button");
     if (target.text() === "X") {
-        console.log("delete");
         deleteGroup(target);
     }
     else {
-        lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
-        lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
-        setActive(target);
+        if (target.attr("lat") && target.attr("lon")) {
+            lookupCurrentForecast(target.attr("lat"), target.attr("lon"));
+            lookupWeatherForecast(target.attr("lat"), target.attr("lon"));
+            setActive(target);    
+        }
+        else {
+            setActive(yourLocation);
+            getCurrentLocation();
+        }
     }
 }
 
